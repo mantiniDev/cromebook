@@ -108,6 +108,7 @@ cd chromebook-linux-audio
 ```
 
 Reinicie depois. Leia o README do projeto antes, pois ele muda a cada versão.
+Testado no C731 com Lubuntu 24.04: o som passou a funcionar.
 
 ## 5. Teclas do Chromebook
 
@@ -152,6 +153,9 @@ normais.
 
 ## 6. Firmware (se ainda estiver usando o modo desenvolvedor / Legacy)
 
+No C731 deste guia o firmware UEFI do MrChromebox já está instalado
+(`otimizar.sh --info` mostra "coreboot MrChromebox"); nesse caso pule esta seção.
+
 Se o Chromebook ainda mostra a tela "OS verification is OFF" a cada boot, o
 ideal é instalar o firmware **UEFI Full ROM** do MrChromebox (suporta a placa
 `RELM`): o boot fica normal, sem aviso, e o Linux ganha suporte melhor.
@@ -163,7 +167,26 @@ ideal é instalar o firmware **UEFI Full ROM** do MrChromebox (suporta a placa
   errado. Leia a documentação inteira e **faça o backup do firmware** que o
   próprio script oferece.
 
-## 7. Ajustes extras (manuais)
+## 7. Boot mais rápido
+
+No C731 com Lubuntu 24.04 estes dois serviços atrasavam o boot sem necessidade:
+
+```bash
+# espera a internet conectar antes de seguir o boot
+sudo systemctl disable NetworkManager-wait-online.service
+# só a tela de login (sddm) dependia dele; custava ~7,5 s
+sudo systemctl mask systemd-udev-settle.service
+```
+
+Se a tela de login não aparecer depois disso: Ctrl+Alt+F2 (tecla →),
+entre com usuário e senha e rode
+`sudo systemctl unmask systemd-udev-settle.service && sudo reboot`.
+
+Resultado medido (`systemd-analyze`): tela de login em ~16 s, boot completo
+em ~18,5 s. O que sobra no caminho (NetworkManager, dbus) não vale a pena
+mexer.
+
+## 8. Ajustes extras (manuais)
 
 - **`noatime` no `/etc/fstab`**: reduz escritas no eMMC. Na linha da partição
   `/`, troque `defaults` por `defaults,noatime`. Faça um backup antes
