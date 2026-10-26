@@ -261,14 +261,16 @@ if [[ $PM == apt ]] && tem snap; then
         # Repositório oficial da Mozilla (https://support.mozilla.org, "Install Firefox on Linux")
         instalar wget gpg
         install -d -m 0755 /etc/apt/keyrings
-        wget -qO /etc/apt/keyrings/packages.mozilla.org.asc \
-            https://packages.mozilla.org/apt/repo-signing-key.gpg
-        fp=$(gpg -n -q --import --import-options import-show --with-colons \
-                 /etc/apt/keyrings/packages.mozilla.org.asc 2>/dev/null \
-             | awk -F: '/^fpr/{print $10; exit}')
+        chave=/etc/apt/keyrings/packages.mozilla.org.asc
+        fp=""
+        if wget -nv -O "$chave" https://packages.mozilla.org/apt/repo-signing-key.gpg; then
+            fp=$(gpg --show-keys --with-colons "$chave" | awk -F: '/^fpr/{print $10; exit}')
+        else
+            amarelo "Não foi possível baixar a chave da Mozilla (verifique a internet)."
+        fi
         if [[ $fp != 35BAA0B33E9EB396F59CA838C0BA5CE6DC6315A3 ]]; then
-            amarelo "Chave da Mozilla não confere; abortando este passo."
-            rm -f /etc/apt/keyrings/packages.mozilla.org.asc
+            amarelo "Chave da Mozilla não confere (obtida: '${fp:-nenhuma}'); abortando este passo."
+            rm -f "$chave"
         else
             echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" \
                 > /etc/apt/sources.list.d/mozilla.list
