@@ -66,9 +66,16 @@ titulo "3. Entrar no GitHub"
 if gh auth status >/dev/null 2>&1; then
     verde "Já conectado ao GitHub."
 else
-    echo "Escolha: GitHub.com → HTTPS → Yes → Login with a web browser."
     echo "Ele mostra um código; o Firefox abre e você cola o código lá."
-    gh auth login --hostname github.com --git-protocol https --web
+    echo "Em 'Authenticate Git with your GitHub credentials?' responda Y."
+    # --insecure-storage: guarda o acesso em ~/.config/gh (só seu usuário lê).
+    # Sem isso, no LXQt o gh pode ficar parado esperando um chaveiro de senhas
+    # que não existe, e o login nunca termina de ser salvo.
+    gh auth login --hostname github.com --git-protocol https --web --insecure-storage
+    if ! gh auth status >/dev/null 2>&1; then
+        amarelo "O login no GitHub não foi salvo. Rode 'gh auth status' e mande a mensagem."
+        exit 1
+    fi
 fi
 gh auth setup-git >/dev/null 2>&1
 if [[ -z $(git config --global user.name) ]]; then
