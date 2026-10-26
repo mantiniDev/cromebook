@@ -186,7 +186,31 @@ Resultado medido (`systemd-analyze`): tela de login em ~16 s, boot completo
 em ~18,5 s. O que sobra no caminho (NetworkManager, dbus) não vale a pena
 mexer.
 
-## 8. Ajustes extras (manuais)
+## 8. Estação de administração do idbike
+
+A pasta `idbike-admin/` transforma o Chromebook no posto de trabalho do
+[idbike](https://www.idbike.com.br):
+
+```bash
+cd ~/cromebook && git pull
+bash idbike-admin/instalar.sh      # sem sudo; pede a senha quando precisa
+```
+
+O script instala git, GitHub CLI, Node.js 22 (o mesmo dos testes do idbike) e
+o editor Geany. Faz login no GitHub, baixa o código em `~/idbike` e, se você
+quiser, instala a Netlify CLI e o Claude Code. No fim, cria quatro ícones:
+
+| Ícone | O que faz |
+|---|---|
+| **idbike admin** | Painel com Netlify, Supabase, Mercado Pago, Strava, Resend, GitHub, Registro.br e Search Console, consultas SQL prontas (funil, contas novas, pagamentos, assinaturas, cortesia) e comandos do terminal com botão "Copiar" |
+| **idbike app** | Abre o app publicado |
+| **idbike local** | Atualiza o código e roda o app no Chromebook (`localhost:8080/app/`) |
+| **idbike testes** | Roda os mesmos testes que o GitHub roda a cada envio |
+
+O painel é só uma página com links: nenhuma senha ou chave fica salva nele.
+Faça login uma vez em cada serviço no Firefox e ele lembra depois.
+
+## 9. Ajustes extras (manuais)
 
 - **`noatime` no `/etc/fstab`**: reduz escritas no eMMC. Na linha da partição
   `/`, troque `defaults` por `defaults,noatime`. Faça um backup antes
