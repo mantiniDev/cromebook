@@ -234,19 +234,40 @@ declare -A DESCRICAO=(
     [cups-browsed.service]="busca de impressoras na rede"
     [bluetooth.service]="Bluetooth (desative se não usa fone/mouse BT)"
     [avahi-daemon.service]="descoberta de dispositivos na rede local"
+    [kerneloops.service]="envio de relatórios de falha do kernel"
+    [switcheroo-control.service]="troca de placa de vídeo (o C731 só tem uma)"
+    [rsyslog.service]="log em texto duplicado (o journald já guarda os logs; poupa o eMMC)"
 )
-for s in ModemManager.service cups-browsed.service cups.service avahi-daemon.service bluetooth.service; do
+for s in ModemManager.service cups-browsed.service kerneloops.service switcheroo-control.service \
+         rsyslog.service cups.service avahi-daemon.service bluetooth.service; do
     servico_existe "$s" || continue
     systemctl is-enabled "$s" >/dev/null 2>&1 || continue
     padrao=n
-    [[ $s == ModemManager.service || $s == cups-browsed.service ]] && padrao=s
+    case $s in
+        ModemManager.service|cups-browsed.service|kerneloops.service|switcheroo-control.service|rsyslog.service) padrao=s ;;
+    esac
     if perguntar "Desativar ${DESCRICAO[$s]}?" "$padrao"; then
         systemctl disable --now "$s" 2>/dev/null
         [[ $s == avahi-daemon.service ]] && systemctl disable --now avahi-daemon.socket 2>/dev/null
         [[ $s == cups.service ]] && systemctl disable --now cups.socket cups.path 2>/dev/null
+        [[ $s == rsyslog.service ]] && systemctl disable --now syslog.socket 2>/dev/null
         verde "$s desativado (reativar: sudo systemctl enable --now $s)."
     fi
 done
+
+# Ícone do Bluetooth na barra (blueman-applet, ~100 MB) sem o Bluetooth ligado
+if [[ -f /etc/xdg/autostart/blueman.desktop && -n ${SUDO_USER:-} ]] \
+   && ! systemctl is-enabled bluetooth.service >/dev/null 2>&1; then
+    casa=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+    if [[ ! -f $casa/.config/autostart/blueman.desktop ]] \
+       && perguntar "O Bluetooth está desligado. Tirar o ícone do Bluetooth da inicialização (~100 MB)?"; then
+        install -d -o "$SUDO_USER" "$casa/.config/autostart"
+        printf '[Desktop Entry]\nType=Application\nName=Blueman Applet\nHidden=true\n' \
+            > "$casa/.config/autostart/blueman.desktop"
+        chown "$SUDO_USER": "$casa/.config/autostart/blueman.desktop"
+        verde "Ícone do Bluetooth removido da inicialização (vale no próximo login)."
+    fi
+fi
 
 # ---------------------------------------------------------------------------
 # 8. Trocar o Snap pelo Firefox .deb da Mozilla (Ubuntu/Lubuntu)
