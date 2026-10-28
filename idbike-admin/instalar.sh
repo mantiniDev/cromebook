@@ -163,7 +163,8 @@ EOF
 }
 criar_atalho idbike-admin "idbike admin" "Painel com todos os acessos do idbike" \
     "firefox --new-window file://$DADOS/painel.html"
-criar_atalho idbike-painel "idbike painel" "Números: clientes, planos, pagamentos e funil" \n    "firefox --new-window https://claude.ai/artifact/6nMnvrh76MaGjYnq6Gy6GT"
+criar_atalho idbike-painel "idbike painel" "Números e administração do idbike (login + autenticador)" \
+    "firefox --new-window https://www.idbike.com.br/admin/"
 criar_atalho idbike-app "idbike app" "Abrir o app publicado" \
     "firefox --new-window https://www.idbike.com.br/app/"
 criar_atalho idbike-local "idbike local" "Rodar o app no Chromebook" \
@@ -183,6 +184,6 @@ verde "Ícones criados no menu (Programação) e na área de trabalho."
 # ---------------------------------------------------------------------------
 titulo "Pronto"
 echo "- Ícone 'idbike admin': painel com Netlify, Supabase, Mercado Pago, Strava, consultas SQL..."
-echo "- Ícone 'idbike painel': números ao vivo (clientes, planos, pagamentos, funil), no claude.ai"
+echo "- Ícone 'idbike painel': idbike.com.br/admin (números ao vivo, clientes, cortesias)"
 echo "- Na primeira vez, a área de trabalho pode perguntar se confia no ícone: responda que sim."
 echo "- Faça login uma vez em cada serviço no Firefox; ele lembra depois."

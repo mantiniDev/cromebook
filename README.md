@@ -203,7 +203,7 @@ quiser, instala a Netlify CLI e o Claude Code. No fim, cria cinco ícones:
 | Ícone | O que faz |
 |---|---|
 | **idbike admin** | Painel com Netlify, Supabase, Mercado Pago, Strava, Resend, GitHub, Registro.br e Search Console, consultas SQL prontas (funil, contas novas, pagamentos, assinaturas, cortesia) e comandos do terminal com botão "Copiar" |
-| **idbike painel** | Painel de números ao vivo no claude.ai: clientes e período de cada um, usuários por plano, pagamentos, receita, cadastros e vendas por dia e o funil (lê o Supabase pela sua conta do claude.ai) |
+| **idbike painel** | Abre idbike.com.br/admin: clientes e período de cada um, usuários por plano, pagamentos, receita, cadastros e vendas por dia, funil e cortesias (pede o código do e-mail e o do autenticador) |
 | **idbike app** | Abre o app publicado |
 | **idbike local** | Atualiza o código e roda o app no Chromebook (`localhost:8080/app/`) |
 | **idbike testes** | Roda os mesmos testes que o GitHub roda a cada envio |
