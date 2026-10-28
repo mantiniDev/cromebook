@@ -198,11 +198,12 @@ bash idbike-admin/instalar.sh      # sem sudo; pede a senha quando precisa
 
 O script instala git, GitHub CLI, Node.js 22 (o mesmo dos testes do idbike) e
 o editor Geany. Faz login no GitHub, baixa o código em `~/idbike` e, se você
-quiser, instala a Netlify CLI e o Claude Code. No fim, cria quatro ícones:
+quiser, instala a Netlify CLI e o Claude Code. No fim, cria cinco ícones:
 
 | Ícone | O que faz |
 |---|---|
 | **idbike admin** | Painel com Netlify, Supabase, Mercado Pago, Strava, Resend, GitHub, Registro.br e Search Console, consultas SQL prontas (funil, contas novas, pagamentos, assinaturas, cortesia) e comandos do terminal com botão "Copiar" |
+| **idbike painel** | Painel de números ao vivo no claude.ai: clientes e período de cada um, usuários por plano, pagamentos, receita, cadastros e vendas por dia e o funil (lê o Supabase pela sua conta do claude.ai) |
 | **idbike app** | Abre o app publicado |
 | **idbike local** | Atualiza o código e roda o app no Chromebook (`localhost:8080/app/`) |
 | **idbike testes** | Roda os mesmos testes que o GitHub roda a cada envio |

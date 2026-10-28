@@ -30,6 +30,9 @@
   a.cartao:hover, a.cartao:focus-visible { border-color: var(--destaque); outline: none; }
   a.cartao strong { display: block; font-size: 15px; }
   a.cartao small { color: var(--suave); }
+  a.cartao.principal { border: 2px solid var(--destaque); padding: 16px 18px; }
+  a.cartao.principal strong { font-size: 19px; }
+  a.cartao.principal small { display: block; margin-top: 4px; }
   .bloco { background: var(--cartao); border: 1px solid var(--borda); border-radius: 10px;
            padding: 10px 12px; margin-bottom: 10px; }
   .bloco .topo { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
@@ -53,6 +56,14 @@
   <span>tudo para controlar o site e o app num lugar só</span>
 </header>
 <main>
+
+  <h2>Números do idbike</h2>
+  <a class="cartao principal" href="https://claude.ai/artifact/6nMnvrh76MaGjYnq6Gy6GT" target="_blank">
+    <strong>Painel idbike →</strong>
+    <small>Clientes e período de cada um, usuários por plano, pagamentos do Mercado Pago, receita do mês,
+      cadastros e vendas por dia e o funil dos últimos 30 dias. Lê o Supabase ao vivo; abre no claude.ai,
+      com a sua conta (e o Supabase conectado nela).</small>
+  </a>
 
   <h2>O produto</h2>
   <div class="grade">

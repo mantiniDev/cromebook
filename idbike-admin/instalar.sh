@@ -6,7 +6,7 @@
 #
 # Instala: git, GitHub CLI, Node.js 22 (o mesmo dos testes no GitHub), editor Geany,
 # e opcionalmente Netlify CLI e Claude Code. Baixa o código em ~/idbike e cria
-# os ícones "idbike admin", "idbike app", "idbike local" e "idbike testes".
+# os ícones "idbike admin", "idbike painel", "idbike app", "idbike local" e "idbike testes".
 
 set -uo pipefail
 
@@ -163,6 +163,7 @@ EOF
 }
 criar_atalho idbike-admin "idbike admin" "Painel com todos os acessos do idbike" \
     "firefox --new-window file://$DADOS/painel.html"
+criar_atalho idbike-painel "idbike painel" "Números: clientes, planos, pagamentos e funil" \n    "firefox --new-window https://claude.ai/artifact/6nMnvrh76MaGjYnq6Gy6GT"
 criar_atalho idbike-app "idbike app" "Abrir o app publicado" \
     "firefox --new-window https://www.idbike.com.br/app/"
 criar_atalho idbike-local "idbike local" "Rodar o app no Chromebook" \
@@ -172,7 +173,7 @@ criar_atalho idbike-testes "idbike testes" "Rodar os testes automáticos" \
 
 mesa=$(xdg-user-dir DESKTOP 2>/dev/null || echo "$HOME/Desktop")
 if [[ -d $mesa ]]; then
-    for a in idbike-admin idbike-app idbike-local idbike-testes; do
+    for a in idbike-admin idbike-painel idbike-app idbike-local idbike-testes; do
         cp "$APPS/$a.desktop" "$mesa/"
     done
 fi
@@ -182,5 +183,6 @@ verde "Ícones criados no menu (Programação) e na área de trabalho."
 # ---------------------------------------------------------------------------
 titulo "Pronto"
 echo "- Ícone 'idbike admin': painel com Netlify, Supabase, Mercado Pago, Strava, consultas SQL..."
+echo "- Ícone 'idbike painel': números ao vivo (clientes, planos, pagamentos, funil), no claude.ai"
 echo "- Na primeira vez, a área de trabalho pode perguntar se confia no ícone: responda que sim."
 echo "- Faça login uma vez em cada serviço no Firefox; ele lembra depois."
