@@ -6,11 +6,10 @@
 #
 # Instala: git, GitHub CLI, Node.js 22 (o mesmo dos testes no GitHub), editor Geany,
 # e opcionalmente Netlify CLI e Claude Code. Baixa o código em ~/idbike e cria
-# os ícones "idbike admin", "idbike painel", "idbike app", "idbike local" e "idbike testes".
+# o ícone "idbike painel", que abre idbike.com.br/admin.
 
 set -uo pipefail
 
-AQUI="$(cd "$(dirname "$0")" && pwd)"
 CODIGO="$HOME/idbike"
 DADOS="$HOME/.local/share/idbike-admin"
 BIN="$HOME/.local/bin"
@@ -113,9 +112,15 @@ if perguntar "Instalar o Claude Code?" n; then
 fi
 
 # ---------------------------------------------------------------------------
-titulo "7. Ícones no menu e na área de trabalho"
-mkdir -p "$DADOS" "$BIN" "$APPS"
-cp "$AQUI/painel.html" "$DADOS/painel.html"
+titulo "7. Ícone 'idbike painel' no menu e na área de trabalho"
+mkdir -p "$DADOS" "$APPS"
+mesa=$(xdg-user-dir DESKTOP 2>/dev/null || echo "$HOME/Desktop")
+
+# Ícones de versões anteriores deste script (o admin do site substituiu o painel local)
+for a in idbike-admin idbike-app idbike-local idbike-testes; do
+    rm -f "$APPS/$a.desktop" "$mesa/$a.desktop"
+done
+rm -f "$DADOS/painel.html" "$BIN/idbike-local" "$BIN/idbike-testes"
 
 icone=applications-internet
 if [[ -f $CODIGO/marca/idbike-simbolo-1024px.png ]]; then
@@ -123,67 +128,22 @@ if [[ -f $CODIGO/marca/idbike-simbolo-1024px.png ]]; then
     icone="$DADOS/idbike.png"
 fi
 
-cat > "$BIN/idbike-local" <<EOF
-#!/usr/bin/env bash
-# Roda o app do idbike no Chromebook (http://localhost:8080/app/)
-cd "$CODIGO" || exit 1
-git pull --ff-only
-(sleep 2; xdg-open http://localhost:8080/app/) &
-echo "App em http://localhost:8080/app/  (feche esta janela ou Ctrl+C para parar)"
-python3 -m http.server 8080 --directory site
-EOF
-
-cat > "$BIN/idbike-testes" <<EOF
-#!/usr/bin/env bash
-# Confere a sintaxe e roda os testes do idbike (o mesmo que o GitHub faz)
-cd "$CODIGO" || exit 1
-ok=1
-for f in site/app/js/*.js netlify/functions/*.mjs netlify/lib/*.mjs; do
-    node --check "\$f" || ok=0
-done
-node --test "tests/*.test.mjs" || ok=0
-echo
-if [[ \$ok -eq 1 ]]; then echo "TUDO CERTO: pode enviar."; else echo "ALGO FALHOU: veja acima."; fi
-read -rp "Enter para fechar..."
-EOF
-chmod +x "$BIN/idbike-local" "$BIN/idbike-testes"
-
-criar_atalho() {  # arquivo nome comentario comando
-    cat > "$APPS/$1.desktop" <<EOF
+cat > "$APPS/idbike-painel.desktop" <<EOF
 [Desktop Entry]
 Type=Application
-Name=$2
-Comment=$3
-Exec=$4
+Name=idbike painel
+Comment=Números e administração do idbike (login + autenticador)
+Exec=firefox --new-window https://www.idbike.com.br/admin/
 Icon=$icone
 Terminal=false
 Categories=Development;
 EOF
-    chmod +x "$APPS/$1.desktop"
-}
-criar_atalho idbike-admin "idbike admin" "Painel com todos os acessos do idbike" \
-    "firefox --new-window file://$DADOS/painel.html"
-criar_atalho idbike-painel "idbike painel" "Números e administração do idbike (login + autenticador)" \
-    "firefox --new-window https://www.idbike.com.br/admin/"
-criar_atalho idbike-app "idbike app" "Abrir o app publicado" \
-    "firefox --new-window https://www.idbike.com.br/app/"
-criar_atalho idbike-local "idbike local" "Rodar o app no Chromebook" \
-    "x-terminal-emulator -e $BIN/idbike-local"
-criar_atalho idbike-testes "idbike testes" "Rodar os testes automáticos" \
-    "x-terminal-emulator -e $BIN/idbike-testes"
-
-mesa=$(xdg-user-dir DESKTOP 2>/dev/null || echo "$HOME/Desktop")
-if [[ -d $mesa ]]; then
-    for a in idbike-admin idbike-painel idbike-app idbike-local idbike-testes; do
-        cp "$APPS/$a.desktop" "$mesa/"
-    done
-fi
+chmod +x "$APPS/idbike-painel.desktop"
+[[ -d $mesa ]] && cp "$APPS/idbike-painel.desktop" "$mesa/"
 update-desktop-database "$APPS" 2>/dev/null
-verde "Ícones criados no menu (Programação) e na área de trabalho."
+verde "Ícone 'idbike painel' criado no menu (Programação) e na área de trabalho."
 
 # ---------------------------------------------------------------------------
 titulo "Pronto"
-echo "- Ícone 'idbike admin': painel com Netlify, Supabase, Mercado Pago, Strava, consultas SQL..."
-echo "- Ícone 'idbike painel': idbike.com.br/admin (números ao vivo, clientes, cortesias)"
+echo "- Ícone 'idbike painel': idbike.com.br/admin (números, clientes, cortesias e os acessos)"
 echo "- Na primeira vez, a área de trabalho pode perguntar se confia no ícone: responda que sim."
-echo "- Faça login uma vez em cada serviço no Firefox; ele lembra depois."

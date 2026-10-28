@@ -198,18 +198,19 @@ bash idbike-admin/instalar.sh      # sem sudo; pede a senha quando precisa
 
 O script instala git, GitHub CLI, Node.js 22 (o mesmo dos testes do idbike) e
 o editor Geany. Faz login no GitHub, baixa o código em `~/idbike` e, se você
-quiser, instala a Netlify CLI e o Claude Code. No fim, cria cinco ícones:
+quiser, instala a Netlify CLI e o Claude Code. No fim, cria o ícone
+**idbike painel**, que abre [idbike.com.br/admin](https://idbike.com.br/admin):
+números ao vivo, clientes, pagamentos, funil, cortesias e os links de
+administração (Netlify, Supabase, Mercado Pago, Strava…). O admin pede o código
+do e-mail e o do aplicativo autenticador.
 
-| Ícone | O que faz |
-|---|---|
-| **idbike admin** | Painel com Netlify, Supabase, Mercado Pago, Strava, Resend, GitHub, Registro.br e Search Console, consultas SQL prontas (funil, contas novas, pagamentos, assinaturas, cortesia) e comandos do terminal com botão "Copiar" |
-| **idbike painel** | Abre idbike.com.br/admin: clientes e período de cada um, usuários por plano, pagamentos, receita, cadastros e vendas por dia, funil e cortesias (pede o código do e-mail e o do autenticador) |
-| **idbike app** | Abre o app publicado |
-| **idbike local** | Atualiza o código e roda o app no Chromebook (`localhost:8080/app/`) |
-| **idbike testes** | Roda os mesmos testes que o GitHub roda a cada envio |
+Para testar o código antes de publicar:
 
-O painel é só uma página com links: nenhuma senha ou chave fica salva nele.
-Faça login uma vez em cada serviço no Firefox e ele lembra depois.
+```bash
+cd ~/idbike && git pull
+python3 -m http.server 8080 --directory site   # app em http://localhost:8080/app/
+node --test "tests/*.test.mjs"                  # os mesmos testes do GitHub
+```
 
 ## 9. Ajustes extras (manuais)
 
