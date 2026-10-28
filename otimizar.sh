@@ -251,6 +251,12 @@ for s in ModemManager.service cups-browsed.service kerneloops.service switcheroo
         [[ $s == avahi-daemon.service ]] && systemctl disable --now avahi-daemon.socket 2>/dev/null
         [[ $s == cups.service ]] && systemctl disable --now cups.socket cups.path 2>/dev/null
         [[ $s == rsyslog.service ]] && systemctl disable --now syslog.socket 2>/dev/null
+        # é ativado de novo pelo D-Bus quando algum programa pergunta pela placa de vídeo
+        if [[ $s == switcheroo-control.service ]]; then
+            systemctl mask --now "$s" 2>/dev/null
+            verde "$s desativado (reativar: sudo systemctl unmask $s)."
+            continue
+        fi
         verde "$s desativado (reativar: sudo systemctl enable --now $s)."
     fi
 done
